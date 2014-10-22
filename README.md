@@ -8,7 +8,7 @@ Currently the extension is in very alpha state, not use in production enviroment
 
 Depedencies (Debian flavour):
 
-apt-get install gcc php php-devel
+apt-get install gcc php php5-dev
 
 __Build__
 
