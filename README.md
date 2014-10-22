@@ -160,4 +160,4 @@ sudo apt-get install python-pip
 pip install urwid
 LapseReader -i index_file.idx [-p path_of_data_file]
 
-![LapseReader in action](https://github.com/jmartin82/phplapse/raw/master/src/lapse_reader.png "LapseReader")
+![LapseReader in action](https://raw.githubusercontent.com/jmartin82/phplapse/master/lapse_reader.png "LapseReader")
