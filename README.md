@@ -1,4 +1,5 @@
 # PHPLAPSE #
+[![Analytics](https://ga-beacon.appspot.com/UA-56028784-1/phplapse/readme?pixel)](https://github.com/jmartin82/phplapse)
 
 PHPlapse is a zend extension that allow analize part of your script execution flow. You can use it for understand how your script works or find a little mistakes in your code.
 
