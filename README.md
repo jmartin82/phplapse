@@ -41,10 +41,8 @@ php-config|grep extension-dir
 > **boolean phplapse_start();** Start the lapse log.
 
 > **string phplapse_stop();** Stop the lapse log and return the lapse index file.
-
-Return Values
-
-Lapse index file path.
+> **Return**:
+> Lapse index file path.
 
 
 ## Output ##
