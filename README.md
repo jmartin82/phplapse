@@ -38,19 +38,9 @@ php-config|grep extension-dir
 
 ## Functions ##
 
-boolean phplapse_start();
+> **boolean phplapse_start();** Start the lapse log.
 
-__Description__
-
-Start the lapse log.
-
-***
-
-string phplapse_stop();
-
-__Description__
-
-Stop the lapse log and return the lapse index file.
+> **string phplapse_stop();** Stop the lapse log and return the lapse index file.
 
 Return Values
 
