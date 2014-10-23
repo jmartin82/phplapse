@@ -2,19 +2,21 @@
 
 PHPlapse is a zend extension that allow analize part of your script execution flow. You can use it for understand how your script works or find a little mistakes in your code.
 
-Currently the extension is in very alpha state, not use in production enviroment.
+Currently the extension is in very alpha state, do not use in production enviroment.
 
 ## Install ##
 
 Depedencies (Debian flavour):
 
 ```
-apt-get install gcc php php5-dev
+apt-get install gcc php5 php5-dev
 ```
 
 __Build__
 
 ```
+$ git clone <project repo url>
+$ cd phplapse/extension
 $ phpize
 $ ./configure
 $ make
@@ -35,6 +37,8 @@ Check installation:
 ```
 php-config|grep extension-dir
 ```
+If PHPlapse is correctly installed, you should see the `phplapse.so` extension when you ls the displayed directory.
+
 
 ## Functions ##
 
@@ -155,8 +159,10 @@ This repository includes too a sample application to read index files. This apli
 
 __Run__
 
-sudo apt-get install python-pip
-pip install urwid
-LapseReader -i index_file.idx [-p path_of_data_file]
+```
+$ sudo apt-get install python-pip
+$ pip install urwid
+$ LapseReader -i index_file.idx [-p path_of_data_file]
+```
 
 ![LapseReader in action](https://raw.githubusercontent.com/jmartin82/phplapse/master/lapse_reader.png "LapseReader")
