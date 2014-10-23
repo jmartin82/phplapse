@@ -1,7 +1,7 @@
 # PHPLAPSE #
 [![Analytics](https://ga-beacon.appspot.com/UA-56028784-1/phplapse/readme?pixel)](https://github.com/jmartin82/phplapse)
 
-PHPlapse is a zend extension that allow analize part of your script execution flow. You can use it for understand how your script works or find a little mistakes in your code.
+PHPlapse is a zend extension that allow analyze part of your script execution flow. You can use it for understanding how your script works or find a littles mistakes in your code.
 
 Currently the extension is in very alpha state, do not use in production enviroment.
 
@@ -38,7 +38,7 @@ Check installation:
 ```
 php-config|grep extension-dir
 ```
-If PHPlapse is correctly installed, you should see the `phplapse.so` extension when you ls the displayed directory.
+If PHPlapse is correctly installed, you should see the `phplapse.so` extension when you "ls" the displayed directory.
 
 
 ## Functions ##
@@ -70,8 +70,11 @@ HEADER
 ```
 
 Version: File format version
+
 dFile: File name of dat file. (The same of the idx file with differnt extension)
+
 cDate: Creation date
+
 steps: Analyzed steps
 
 STEP(n)
@@ -84,12 +87,19 @@ STEP(n)
 ```
 
 Step: Step number
+
 Time: Time used in step (micro seconds)
+
 tTime: Total lapse time (milli seconds)
+
 Mem: Memory used in step (Kb)
+
 memPeak: Memory peak (kb)
+
 Function: Function executed in step
+
 Class: Class executed in step
+
 cReference: Context byte reference in .dat file.
 
 Note: All numbers are in "Little Endian".
