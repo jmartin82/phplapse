@@ -8,22 +8,33 @@ Currently the extension is in very alpha state, not use in production enviroment
 
 Depedencies (Debian flavour):
 
+```
 apt-get install gcc php php5-dev
+```
 
 __Build__
 
+```
 $ phpize
 $ ./configure
 $ make
+```
 
 __Install__
 
+```
 make install
+```
+
 Add extension in php.ini
+```
 zend_extension=phplapse.so
+```
 
 Check installation:
+```
 php-config|grep extension-dir
+```
 
 ## Functions ##
 
