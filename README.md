@@ -1,11 +1,13 @@
 # PHPLAPSE #
 [![Analytics](https://ga-beacon.appspot.com/UA-56028784-1/phplapse/readme?pixel)](https://github.com/jmartin82/phplapse)
 
-![LapseReader in action](https://raw.githubusercontent.com/jmartin82/phplapse/master/lapse_reader.png "LapseReader")
 
 PHPlapse is a zend extension that allow analyze part of your script execution flow. You can use it for understanding how your script works or find a littles mistakes in your code.
 
 Currently the extension is in very alpha state, do not use in production enviroment.
+
+![LapseReader in action](https://raw.githubusercontent.com/jmartin82/phplapse/master/lapse_reader.png "LapseReader")
+
 
 ## Install ##
 
