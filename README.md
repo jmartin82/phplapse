@@ -48,10 +48,10 @@ If PHPlapse is correctly installed, you should see the `phplapse.so` extension w
 ## Functions ##
 
 > **boolean phplapse_start();** Start the lapse log.
-
 > **string phplapse_stop();** Stop the lapse log and return the lapse index file.
 > **Return**:
 > Lapse index file path.
+> **boolean phplapse_include_path();** Only gather steps from include path scripts.
 
 
 ## Output ##
