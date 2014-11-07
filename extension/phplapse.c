@@ -5,6 +5,7 @@
 #include <stdio.h> 
 #include <time.h>
 #include <stdlib.h> 
+#include <string.h>
 #include "php.h"
 #include "zend.h"
 #include "Zend/zend_exceptions.h"
@@ -22,6 +23,7 @@ void phplapse_start_lapse_time();
 void phplapse_stop_lapse_time();
 static uint32_t phplapse_get_us_interval(struct timeval *start, struct timeval *end);
 void phplapse_write_idx_header();
+char *phplapse_close_request(int forced);
 
 
 //---------------------------------------------------
@@ -31,6 +33,7 @@ void phplapse_write_idx_header();
 static zend_function_entry phplapse_functions[] = {
   PHP_FE(phplapse_start, NULL)
   PHP_FE(phplapse_stop, NULL)
+  PHP_FE(phplapse_include_path, NULL)
   {NULL, NULL, NULL}
 };
 
@@ -91,7 +94,7 @@ ZEND_DECLARE_MODULE_GLOBALS(phplapse)
  * Request shutdown callback.
  */
  PHP_RSHUTDOWN_FUNCTION(phplapse) {
-  PGV(do_lapse) = 0;
+  phplapse_close_request(1);
   return SUCCESS;
 }
 
@@ -110,19 +113,19 @@ ZEND_DECLARE_MODULE_GLOBALS(phplapse)
 
 
 void gen_random(char *s, const int len) {
-    
-    static const char alphanum[] =
-        "0123456789"
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        "abcdefghijklmnopqrstuvwxyz";
 
-    int i = 0;
-    srand( (unsigned) time(NULL) * getpid());
-    for (i = 0; i < len; ++i) {
-        s[i] = alphanum[rand() % (sizeof(alphanum) - 1)];
-    }
+  static const char alphanum[] =
+  "0123456789"
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+  "abcdefghijklmnopqrstuvwxyz";
 
-    s[len] = 0;
+  int i = 0;
+  srand( (unsigned) time(NULL) * getpid());
+  for (i = 0; i < len; ++i) {
+    s[i] = alphanum[rand() % (sizeof(alphanum) - 1)];
+  }
+
+  s[len] = 0;
 }
 
 
@@ -133,6 +136,7 @@ void gen_random(char *s, const int len) {
 PHP_FUNCTION(phplapse_start)
 {
   if (PGV(do_lapse) == 0) {
+    memset ( PGV(include_path), 0, 1024 );
     PGV(do_lapse) = 1;
     PGV(g_num) = 0;
     PGV(g_step) = empty_step;
@@ -169,21 +173,46 @@ PHP_FUNCTION(phplapse_start)
 
 PHP_FUNCTION(phplapse_stop)
 {
+  char *idx_file_name = phplapse_close_request(0);
+  if (idx_file_name)
+  {
+    RETURN_STRING(idx_file_name,1);
+  }
+  RETURN_FALSE;
+}
+
+PHP_FUNCTION(phplapse_include_path)
+{
+  char *t;
+  int s_len;
+  if(zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s/", &t, &s_len) == FAILURE)
+  {
+    RETURN_FALSE;
+  }
+ 
+  strncpy(PGV(include_path),t,s_len);
+  PGV(include_path)[s_len] = '\0';
+  RETURN_TRUE;
+}
+
+
+char *phplapse_close_request(int forced) {
   if (PGV(do_lapse) == 1) {
     phplapse_write_idx_header();
     int file_name_size = strlen(PGV(g_name))+strlen(INI_STR("phplapse.output_dir"))+4;
-    char idx_file_name[file_name_size];
-    php_sprintf(idx_file_name,"%s/%s.idx",INI_STR("phplapse.output_dir"),PGV(g_name));
-
+    char *file_name = malloc(file_name_size*sizeof(char));
+    php_sprintf(file_name,"%s/%s.idx",INI_STR("phplapse.output_dir"),PGV(g_name));
     PGV(do_lapse) = 0;
     if (PGV(g_idx_file) && PGV(g_context_file) )
     {
       php_stream_close(PGV(g_idx_file));
       php_stream_close(PGV(g_context_file));
-      RETURN_STRING(idx_file_name,1);
     }
+    if (forced) {
+      zend_error(E_WARNING, file_name);
+    }
+    return (char *) file_name;
   }
-  RETURN_FALSE;
 }
 
 
@@ -267,7 +296,7 @@ void phplapse_write_idx_header(){
   struct tm tm = *localtime(&t);
   phplapse_header header = {0,"","",0};
   header.version = TOLE16(PHP_PHPLAPSE_FILE_VERSION);
-  php_sprintf(header.filename,"%s.dat",PGV(g_name));  
+  php_sprintf(header.filename,"%s.dat",PGV(g_name));
   php_sprintf(header.datetime, "%d-%02d-%02d %02d:%02d:%02d", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
   header.steps = TOLE32(PGV(g_num-1));
   if (PGV(g_idx_file)) {
@@ -316,6 +345,15 @@ static void phplapse_add_ns_interval(long incr) {
 ZEND_DLEXPORT void phplapse_statement_handler(zend_op_array *op_array)
 {
   if (PGV(do_lapse)) {
+ 
+    int i_path = strlen(PGV(include_path));
+    char *line = zend_get_executed_filename(TSRMLS_C);
+  
+    if (strncmp(PGV(include_path),line,i_path) != 0) {
+      //not in include path
+      return;
+    }
+  
     PGV(g_num)++;
     PGV(g_step) = empty_step;
 

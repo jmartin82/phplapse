@@ -60,6 +60,7 @@ PHP_MINFO_FUNCTION(phplapse);
 
 PHP_FUNCTION(phplapse_start);
 PHP_FUNCTION(phplapse_stop);
+PHP_FUNCTION(phplapse_include_path);
 
 struct _header {
   uint16_t version;
@@ -105,6 +106,7 @@ ZEND_BEGIN_MODULE_GLOBALS(phplapse)
 	struct timeval g_total;
 	uint32_t g_num;
   uint32_t g_context_position;
+  unsigned char include_path[1024];
 	phplapse_step g_step;
 ZEND_END_MODULE_GLOBALS(phplapse)
 
